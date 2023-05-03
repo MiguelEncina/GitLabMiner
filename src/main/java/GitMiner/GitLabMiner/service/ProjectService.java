@@ -23,7 +23,7 @@ public class ProjectService {
 
         String uri = "https://gitlab.com/api/v4/projects/" + id;
 
-        Namespace namespace = restTemplate.getForObject(uri, ProjectSearch.class).getNamespace();
+        ProjectSearch projectSearch = restTemplate.getForObject(uri, ProjectSearch.class);
 
         Issue[] issuesArray = restTemplate.getForObject(uri + "/issues", Issue[].class);
 
@@ -33,7 +33,7 @@ public class ProjectService {
 
         List<Commit> commits = Arrays.stream(commitsArray).toList();
 
-        return new Project(namespace.getId(), namespace.getName(), namespace.getWebUrl(), commits, issues);
+        return new Project(projectSearch.getId(), projectSearch.getName(), projectSearch.getWebUrl(), commits, issues);
 
     }
     
