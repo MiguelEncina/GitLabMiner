@@ -2,19 +2,16 @@
 package GitMiner.GitLabMiner.model;
 
 import java.util.List;
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Issue {
 
     @JsonProperty("id")
     private Integer id;
-    @JsonProperty("ref_id")
+    @JsonProperty("iid")
     private Integer refId;
     @JsonProperty("title")
     private String title;
@@ -40,6 +37,16 @@ public class Issue {
     private Integer downvotes;
     @JsonProperty("web_url")
     private String webUrl;
+    @JsonProperty("comments")
+    private List<Comment> comments;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     @JsonProperty("id")
     public Integer getId() {
@@ -51,12 +58,12 @@ public class Issue {
         this.id = id;
     }
 
-    @JsonProperty("refId")
+    @JsonProperty("iid")
     public Integer getRefId() {
         return refId;
     }
 
-    @JsonProperty("refId")
+    @JsonProperty("iid")
     public void setIid(Integer refId) {
         this.refId = refId;
     }

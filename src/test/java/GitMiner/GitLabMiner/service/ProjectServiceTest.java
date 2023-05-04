@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import GitMiner.GitLabMiner.model.Namespace;
 import GitMiner.GitLabMiner.model.Project;
 import GitMiner.GitLabMiner.service.ProjectService;
 
@@ -18,7 +17,7 @@ public class ProjectServiceTest {
     @Test
     @DisplayName("Get Namespace")
     void testFindNamespace() {
-        Project project = service.findProject("4207231", "", "","");
+        Project project = service.findProject("4207231", "", "");
         System.out.println(project);
     }
 }

@@ -2,12 +2,9 @@
 package GitMiner.GitLabMiner.model;
 
 import java.util.List;
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectSearch {
@@ -48,8 +45,6 @@ public class ProjectSearch {
     private Integer starCount;
     @JsonProperty("last_activity_at")
     private String lastActivityAt;
-    @JsonProperty("namespace")
-    private Namespace namespace;
 
     @JsonProperty("id")
     public Integer getId() {
@@ -231,16 +226,6 @@ public class ProjectSearch {
         this.lastActivityAt = lastActivityAt;
     }
 
-    @JsonProperty("namespace")
-    public Namespace getNamespace() {
-        return namespace;
-    }
-
-    @JsonProperty("namespace")
-    public void setNamespace(Namespace namespace) {
-        this.namespace = namespace;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -316,10 +301,6 @@ public class ProjectSearch {
         sb.append("lastActivityAt");
         sb.append('=');
         sb.append(((this.lastActivityAt == null)?"<null>":this.lastActivityAt));
-        sb.append(',');
-        sb.append("namespace");
-        sb.append('=');
-        sb.append(((this.namespace == null)?"<null>":this.namespace));
         sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');

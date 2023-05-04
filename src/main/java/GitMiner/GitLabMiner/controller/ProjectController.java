@@ -25,7 +25,7 @@ public class ProjectController {
                                 @RequestParam(defaultValue = "20") String sinceIssues,
                                 @RequestParam(defaultValue = "2") String maxPages
     ){
-        return service.findProject(id, sinceCommits, sinceIssues, maxPages);
+        return service.findProject(id, sinceCommits, sinceIssues);
     }
     
 }
