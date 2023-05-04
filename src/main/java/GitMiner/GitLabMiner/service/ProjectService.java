@@ -1,5 +1,6 @@
 package GitMiner.GitLabMiner.service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import GitMiner.GitLabMiner.model.Commit;
 import GitMiner.GitLabMiner.model.Issue;
-import GitMiner.GitLabMiner.model.Namespace;
 import GitMiner.GitLabMiner.model.Project;
 import GitMiner.GitLabMiner.model.ProjectSearch;
 
@@ -19,7 +19,7 @@ public class ProjectService {
     @Autowired
     RestTemplate restTemplate;
 
-    public Project findProject(String id) {
+    public Project findProject(String id, String sinceCommits, String sinceIssues, String maxPages) {
 
         String uri = "https://gitlab.com/api/v4/projects/" + id;
 
@@ -28,7 +28,8 @@ public class ProjectService {
         Issue[] issuesArray = restTemplate.getForObject(uri + "/issues", Issue[].class);
 
         List<Issue> issues = Arrays.stream(issuesArray).toList();
-        
+        // .stream().filter(i -> (LocalDateTime.parse(i.getUpdatedAt()).getYear() == LocalDateTime.now().getYear()) && (LocalDateTime.now().getDayOfYear() - LocalDateTime.parse(i.getUpdatedAt()).getDayOfYear()) <= Integer.parseInt(sinceIssues)).toList();
+       
         Commit[] commitsArray = restTemplate.getForObject(uri + "/repository/commits", Commit[].class);
 
         List<Commit> commits = Arrays.stream(commitsArray).toList();

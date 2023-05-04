@@ -18,7 +18,7 @@ public class ProjectServiceTest {
     @Test
     @DisplayName("Get Namespace")
     void testFindNamespace() {
-        Project project = service.findProject("4207231");
+        Project project = service.findProject("4207231", "", "","");
         System.out.println(project);
     }
 }
