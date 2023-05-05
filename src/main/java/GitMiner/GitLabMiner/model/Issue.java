@@ -1,24 +1,30 @@
-
 package GitMiner.GitLabMiner.model;
-
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "Issue")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Issue {
 
+    @Id
     @JsonProperty("id")
-    private Integer id;
+    private String id;
+
     @JsonProperty("iid")
-    private Integer refId;
+    private String refId;
     @JsonProperty("title")
     private String title;
     @JsonProperty("description")
+    @Column(columnDefinition="TEXT")
     private String description;
     @JsonProperty("state")
     private String state;
+
     @JsonProperty("created_at")
     private String createdAt;
     @JsonProperty("updated_at")
@@ -26,19 +32,141 @@ public class Issue {
     @JsonProperty("closed_at")
     private String closedAt;
     @JsonProperty("labels")
+    @ElementCollection
     private List<String> labels;
     @JsonProperty("author")
-    private Author author;
+    // @NotEmpty(message = "The author of the issue cannot be empty")
+    @JoinColumn(name = "author_id",referencedColumnName = "id")
+    @OneToOne(cascade=CascadeType.ALL)
+    private User author;
     @JsonProperty("assignee")
-    private Object assignee;
+    @JoinColumn(name = "assignee_id",referencedColumnName = "id")
+    @OneToOne(cascade=CascadeType.ALL)
+    private User assignee;
     @JsonProperty("upvotes")
     private Integer upvotes;
     @JsonProperty("downvotes")
     private Integer downvotes;
+
     @JsonProperty("web_url")
     private String webUrl;
+
     @JsonProperty("comments")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "issueId")
     private List<Comment> comments;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRefId() {
+        return refId;
+    }
+
+    public void setRefId(String refId) {
+        this.refId = refId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getClosedAt() {
+        return closedAt;
+    }
+
+    public void setClosedAt(String closedAt) {
+        this.closedAt = closedAt;
+    }
+
+    public List<String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
+    }
+
+    // public User getAuthor() {
+    //     return author;
+    // }
+
+    // public void setAuthor(User author) {
+    //     this.author = author;
+    // }
+
+    // public User getAssignee() {
+    //     return assignee;
+    // }
+
+    // public void setAssignee(User assignee) {
+    //     this.assignee = assignee;
+    // }
+
+    public Integer getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(Integer upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public Integer getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(Integer downvotes) {
+        this.downvotes = downvotes;
+    }
+
+    public String getWebUrl() {
+        return webUrl;
+    }
+
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
+    }
 
     public List<Comment> getComments() {
         return comments;
@@ -48,154 +176,75 @@ public class Issue {
         this.comments = comments;
     }
 
-    @JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    @JsonProperty("id")
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @JsonProperty("iid")
-    public Integer getRefId() {
-        return refId;
-    }
-
-    @JsonProperty("iid")
-    public void setIid(Integer refId) {
-        this.refId = refId;
-    }
-
-    @JsonProperty("title")
-    public String getTitle() {
-        return title;
-    }
-
-    @JsonProperty("title")
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @JsonProperty("description")
-    public String getDescription() {
-        return description;
-    }
-
-    @JsonProperty("description")
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @JsonProperty("state")
-    public String getState() {
-        return state;
-    }
-
-    @JsonProperty("state")
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    @JsonProperty("created_at")
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    @JsonProperty("created_at")
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @JsonProperty("updated_at")
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    @JsonProperty("updated_at")
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    @JsonProperty("closed_at")
-    public String getClosedAt() {
-        return closedAt;
-    }
-
-    @JsonProperty("closed_at")
-    public void setClosedAt(String closedAt) {
-        this.closedAt = closedAt;
-    }
-
-    @JsonProperty("labels")
-    public List<String> getLabels() {
-        return labels;
-    }
-
-    @JsonProperty("labels")
-    public void setLabels(List<String> labels) {
-        this.labels = labels;
-    }
-
-    @JsonProperty("author")
-    public Author getAuthor() {
-        return author;
-    }
-
-    @JsonProperty("author")
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    @JsonProperty("assignee")
-    public Object getAssignee() {
-        return assignee;
-    }
-
-    @JsonProperty("assignee")
-    public void setAssignee(Object assignee) {
-        this.assignee = assignee;
-    }
-
-    @JsonProperty("upvotes")
-    public Integer getUpvotes() {
-        return upvotes;
-    }
-
-    @JsonProperty("upvotes")
-    public void setUpvotes(Integer upvotes) {
-        this.upvotes = upvotes;
-    }
-
-    @JsonProperty("downvotes")
-    public Integer getDownvotes() {
-        return downvotes;
-    }
-
-    @JsonProperty("downvotes")
-    public void setDownvotes(Integer downvotes) {
-        this.downvotes = downvotes;
-    }
-
-    @JsonProperty("web_url")
-    public String getWebUrl() {
-        return webUrl;
-    }
-
-    @JsonProperty("web_url")
-    public void setWebUrl(String webUrl) {
-        this.webUrl = webUrl;
-    }
-
     @Override
     public String toString() {
-        return "Issue [id=" + id + ", refId=" + refId + ", title=" + title + ", description=" + description + ", state="
-                + state + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", closedAt=" + closedAt
-                + ", labels=" + labels + ", author=" + author + ", assignee=" + assignee + ", upvotes=" + upvotes
-                + ", downvotes=" + downvotes + ", webUrl=" + webUrl + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append(Issue.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append("id");
+        sb.append('=');
+        sb.append(((this.id == null) ? "<null>" : this.id));
+        sb.append(',');
+        sb.append("refId");
+        sb.append('=');
+        sb.append(((this.refId == null) ? "<null>" : this.refId));
+        sb.append(',');
+        sb.append("title");
+        sb.append('=');
+        sb.append(((this.title == null) ? "<null>" : this.title));
+        sb.append(',');
+        sb.append("description");
+        sb.append('=');
+        sb.append(((this.description == null) ? "<null>" : this.description));
+        sb.append(',');
+        sb.append("state");
+        sb.append('=');
+        sb.append(((this.state == null) ? "<null>" : this.state));
+        sb.append(',');
+        sb.append("createdAt");
+        sb.append('=');
+        sb.append(((this.createdAt == null) ? "<null>" : this.createdAt));
+        sb.append(',');
+        sb.append("updatedAt");
+        sb.append('=');
+        sb.append(((this.updatedAt == null) ? "<null>" : this.updatedAt));
+        sb.append(',');
+        sb.append("closedAt");
+        sb.append('=');
+        sb.append(((this.closedAt == null) ? "<null>" : this.closedAt));
+        sb.append(',');
+        sb.append("labels");
+        sb.append('=');
+        sb.append(((this.labels == null) ? "<null>" : this.labels));
+        sb.append(',');
+        // sb.append("author");
+        // sb.append('=');
+        // sb.append(((this.author == null) ? "<null>" : this.author));
+        // sb.append(',');
+        // sb.append("assignee");
+        // sb.append('=');
+        // sb.append(((this.assignee == null) ? "<null>" : this.assignee));
+        // sb.append(',');
+        sb.append("upvotes");
+        sb.append('=');
+        sb.append(((this.upvotes == null) ? "<null>" : this.upvotes));
+        sb.append(',');
+        sb.append("downvotes");
+        sb.append('=');
+        sb.append(((this.downvotes == null) ? "<null>" : this.downvotes));
+        sb.append(',');
+        sb.append("comments");
+        sb.append('=');
+        sb.append(((this.comments == null) ? "<null>" : this.comments));
+        sb.append(',');
+
+        if (sb.charAt((sb.length() - 1)) == ',') {
+            sb.setCharAt((sb.length() - 1), ']');
+        } else {
+            sb.append(']');
+        }
+        return sb.toString();
     }
 
-    
+
 
 }

@@ -4,78 +4,65 @@ package GitMiner.GitLabMiner.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Author {
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
+@Entity
+@Table(name = "GMUser")     // Watch out: User is a reserved keyword in H2
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User {
+
+    @Id
     @JsonProperty("id")
-    private Integer id;
+    private String id;
     @JsonProperty("username")
+    @NotEmpty(message = "The username cannot be empty")
     private String username;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("state")
-    private String state;
     @JsonProperty("avatar_url")
     private String avatarUrl;
     @JsonProperty("web_url")
     private String webUrl;
 
-    @JsonProperty("id")
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    @JsonProperty("id")
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    @JsonProperty("username")
     public String getUsername() {
         return username;
     }
 
-    @JsonProperty("username")
     public void setUsername(String username) {
         this.username = username;
     }
 
-    @JsonProperty("name")
     public String getName() {
         return name;
     }
 
-    @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
 
-    @JsonProperty("state")
-    public String getState() {
-        return state;
-    }
-
-    @JsonProperty("state")
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    @JsonProperty("avatar_url")
     public String getAvatarUrl() {
         return avatarUrl;
     }
 
-    @JsonProperty("avatar_url")
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 
-    @JsonProperty("web_url")
     public String getWebUrl() {
         return webUrl;
     }
 
-    @JsonProperty("web_url")
     public void setWebUrl(String webUrl) {
         this.webUrl = webUrl;
     }
@@ -83,7 +70,7 @@ public class Author {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(Author.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append(User.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("id");
         sb.append('=');
         sb.append(((this.id == null)?"<null>":this.id));
@@ -95,10 +82,6 @@ public class Author {
         sb.append("name");
         sb.append('=');
         sb.append(((this.name == null)?"<null>":this.name));
-        sb.append(',');
-        sb.append("state");
-        sb.append('=');
-        sb.append(((this.state == null)?"<null>":this.state));
         sb.append(',');
         sb.append("avatarUrl");
         sb.append('=');

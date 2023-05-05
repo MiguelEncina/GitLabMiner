@@ -62,7 +62,7 @@ public class ProjectService {
             return (last.getYear()==LocalDate.now().getYear() && difDias <= Integer.parseInt(sinceCommits) && difDias >= 0);
         }).toList();
 
-        return new Project(projectSearch.getId(), projectSearch.getName(), projectSearch.getWebUrl(), commits, issues);
+        return new Project(projectSearch.getId().toString(), projectSearch.getName(), projectSearch.getWebUrl(), commits, issues);
 
     }
     
