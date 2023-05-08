@@ -128,21 +128,21 @@ public class Issue {
         this.labels = labels;
     }
 
-    // public User getAuthor() {
-    //     return author;
-    // }
+    public User getAuthor() {
+        return author;
+    }
 
-    // public void setAuthor(User author) {
-    //     this.author = author;
-    // }
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
-    // public User getAssignee() {
-    //     return assignee;
-    // }
+    public User getAssignee() {
+        return assignee;
+    }
 
-    // public void setAssignee(User assignee) {
-    //     this.assignee = assignee;
-    // }
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
 
     public Integer getUpvotes() {
         return upvotes;
@@ -216,14 +216,14 @@ public class Issue {
         sb.append('=');
         sb.append(((this.labels == null) ? "<null>" : this.labels));
         sb.append(',');
-        // sb.append("author");
-        // sb.append('=');
-        // sb.append(((this.author == null) ? "<null>" : this.author));
-        // sb.append(',');
-        // sb.append("assignee");
-        // sb.append('=');
-        // sb.append(((this.assignee == null) ? "<null>" : this.assignee));
-        // sb.append(',');
+        sb.append("author");
+        sb.append('=');
+        sb.append(((this.author == null) ? "<null>" : this.author));
+        sb.append(',');
+        sb.append("assignee");
+        sb.append('=');
+        sb.append(((this.assignee == null) ? "<null>" : this.assignee));
+        sb.append(',');
         sb.append("upvotes");
         sb.append('=');
         sb.append(((this.upvotes == null) ? "<null>" : this.upvotes));

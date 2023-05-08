@@ -40,8 +40,7 @@ public class ProjectController {
                                 @RequestParam(defaultValue = "20") String sinceIssues,
                                 @RequestParam(defaultValue = "2") String maxPages
     ){
-        repository.save(service.findProject(id, sinceCommits, sinceIssues));
-        return service.findProject(id, sinceCommits, sinceIssues);
+        return service.loadProject(id, sinceCommits, sinceIssues);
     }
     
 }
