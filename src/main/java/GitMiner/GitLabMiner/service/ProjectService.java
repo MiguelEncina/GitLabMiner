@@ -68,7 +68,7 @@ public class ProjectService {
     public Project loadProject(String id, String sinceCommits, String sinceIssues) {
         Project project = findProject(id, sinceCommits, sinceIssues);
         HttpEntity<Project> request = new HttpEntity<Project>(project);
-        ResponseEntity<Project> response = restTemplate.exchange("localhost/8080/gitminer/projects", HttpMethod.POST, request, Project.class);
+        ResponseEntity<Project> response = restTemplate.exchange("http://localhost:8080/gitminer/projects", HttpMethod.POST, request, Project.class);
         return response.getBody();
     }
     
