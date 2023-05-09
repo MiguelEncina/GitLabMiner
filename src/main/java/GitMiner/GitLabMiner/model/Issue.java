@@ -1,21 +1,21 @@
 package GitMiner.GitLabMiner.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Issue")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Issue {
 
     @Id
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("iid")
+    @JsonProperty("ref_id")
     private String refId;
     @JsonProperty("title")
     private String title;
@@ -55,6 +55,26 @@ public class Issue {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "issueId")
     private List<Comment> comments;
+
+    public Issue(String id, String refId, String title, String description, String state, String createdAt,
+            String updatedAt, String closedAt, List<String> labels, User author, User assignee, Integer upvotes,
+            Integer downvotes, String webUrl) {
+        this.id = id;
+        this.refId = refId;
+        this.title = title;
+        this.description = description;
+        this.state = state;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.closedAt = closedAt;
+        this.labels = labels;
+        this.author = author;
+        this.assignee = assignee;
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
+        this.webUrl = webUrl;
+        this.comments = new ArrayList<>();
+    }
 
     public String getId() {
         return id;

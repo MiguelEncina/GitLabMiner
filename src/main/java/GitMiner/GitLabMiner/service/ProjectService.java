@@ -1,6 +1,7 @@
 package GitMiner.GitLabMiner.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import GitMiner.GitLabMiner.model.Comment;
 import GitMiner.GitLabMiner.model.Commit;
 import GitMiner.GitLabMiner.model.Issue;
+import GitMiner.GitLabMiner.model.IssueSearch;
 import GitMiner.GitLabMiner.model.Project;
 import GitMiner.GitLabMiner.model.ProjectSearch;
 
@@ -35,9 +37,17 @@ public class ProjectService {
 
         ProjectSearch projectSearch = restTemplate.getForObject(uri, ProjectSearch.class);
 
-        Issue[] issuesArray = restTemplate.getForObject(uri + "/issues", Issue[].class);
+        IssueSearch[] issuesArray = restTemplate.getForObject(uri + "/issues", IssueSearch[].class);
 
-        List<Issue> issues = Arrays.stream(issuesArray)
+        List<Issue> issues = Arrays.stream(issuesArray).map(i -> new Issue(i.getId(), i.getIid(), i.getTitle(), i.getDescription(), i.getState(), i.getCreatedAt(), i.getUpdatedAt(), i.getClosedAt(), i.getLabels(), i.getAuthor(), i.getAssignee(), i.getUpvotes(), i.getDownvotes(), i.getWebUrl())).toList();
+        
+        for(Issue i: issues){
+            HttpEntity<Comment[]> request = new HttpEntity<Comment[]>(null, headers);  
+            ResponseEntity<Comment[]> response = restTemplate.exchange(uri + "/issues/" + i.getRefId() + "/notes", HttpMethod.GET, request, Comment[].class);
+            i.setComments(Arrays.stream(response.getBody()).toList()); 
+        }
+
+        issues.stream()
         .filter(i -> {
             String[] s1 = i.getUpdatedAt().split("T");
             String[] s2 = s1[0].split("-");
@@ -45,11 +55,6 @@ public class ProjectService {
             Integer difDias = LocalDate.now().getDayOfYear() - last.getDayOfYear();
             return (last.getYear()==LocalDate.now().getYear() && difDias <= Integer.parseInt(sinceIssues) && difDias >= 0);
         }).toList();
-        for(Issue i: issues){
-            HttpEntity<Comment[]> request = new HttpEntity<Comment[]>(null, headers);  
-            ResponseEntity<Comment[]> response = restTemplate.exchange(uri + "/issues/" + i.getRefId() + "/notes", HttpMethod.GET, request, Comment[].class);
-            i.setComments(Arrays.stream(response.getBody()).toList()); 
-        }
        
         Commit[] commitsArray = restTemplate.getForObject(uri + "/repository/commits", Commit[].class);
 
