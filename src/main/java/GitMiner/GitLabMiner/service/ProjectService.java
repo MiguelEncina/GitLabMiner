@@ -28,22 +28,22 @@ public class ProjectService {
 
     private String token = "glpat-skNKhe-ru_MvijkQawxS";
 
-    public Project findProject(String id, String sinceCommits, String sinceIssues) {
+    public Project findProject(String id, String sinceCommits, String sinceIssues, String maxPages) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
 
         String uri = "https://gitlab.com/api/v4/projects/" + id;
 
-        ProjectSearch projectSearch = restTemplate.getForObject(uri, ProjectSearch.class);
+        ProjectSearch projectSearch = restTemplate.getForObject(uri + "?page=" + maxPages, ProjectSearch.class);
 
-        IssueSearch[] issuesArray = restTemplate.getForObject(uri + "/issues", IssueSearch[].class);
+        IssueSearch[] issuesArray = restTemplate.getForObject(uri + "/issues?page=" + maxPages, IssueSearch[].class);
 
         List<Issue> issues = Arrays.stream(issuesArray).map(i -> new Issue(i.getId(), i.getIid(), i.getTitle(), i.getDescription(), i.getState(), i.getCreatedAt(), i.getUpdatedAt(), i.getClosedAt(), i.getLabels(), i.getAuthor(), i.getAssignee(), i.getUpvotes(), i.getDownvotes(), i.getWebUrl())).toList();
         
         for(Issue i: issues){
             HttpEntity<Comment[]> request = new HttpEntity<Comment[]>(null, headers);  
-            ResponseEntity<Comment[]> response = restTemplate.exchange(uri + "/issues/" + i.getRefId() + "/notes", HttpMethod.GET, request, Comment[].class);
+            ResponseEntity<Comment[]> response = restTemplate.exchange(uri + "/issues/" + i.getRefId() + "/notes?page=" + maxPages, HttpMethod.GET, request, Comment[].class);
             i.setComments(Arrays.stream(response.getBody()).toList()); 
         }
 
@@ -56,7 +56,7 @@ public class ProjectService {
             return (last.getYear()==LocalDate.now().getYear() && difDias <= Integer.parseInt(sinceIssues) && difDias >= 0);
         }).toList();
        
-        Commit[] commitsArray = restTemplate.getForObject(uri + "/repository/commits", Commit[].class);
+        Commit[] commitsArray = restTemplate.getForObject(uri + "/repository/commits?page=" + maxPages, Commit[].class);
 
         List<Commit> commits = Arrays.stream(commitsArray)
         .filter(c -> {
@@ -70,8 +70,8 @@ public class ProjectService {
         return new Project(projectSearch.getId().toString(), projectSearch.getName(), projectSearch.getWebUrl(), commits, issues);
     }
 
-    public Project loadProject(String id, String sinceCommits, String sinceIssues) {
-        Project project = findProject(id, sinceCommits, sinceIssues);
+    public Project loadProject(String id, String sinceCommits, String sinceIssues, String maxPages) {
+        Project project = findProject(id, sinceCommits, sinceIssues, maxPages);
         HttpEntity<Project> request = new HttpEntity<Project>(project);
         ResponseEntity<Project> response = restTemplate.exchange("http://localhost:8080/gitminer/projects", HttpMethod.POST, request, Project.class);
         return response.getBody();
