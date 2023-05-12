@@ -1,13 +1,10 @@
 package GitMiner.GitLabMiner.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import GitMiner.GitLabMiner.model.Project;
@@ -22,7 +19,8 @@ public class ProjectController {
     public ProjectController(ProjectService service){
         this.service = service;
     }
-    
+
+    // GET http://localhost:8081/gitlab/{id}
     @GetMapping("/{id}")
     public Project findProject(@PathVariable String id,
                                 @RequestParam(defaultValue = "2") String sinceCommits,
@@ -32,6 +30,7 @@ public class ProjectController {
         return service.findProject(id, sinceCommits, sinceIssues, maxPages);
     }
 
+    // POST http://localhost:8081/gitlab/{id}
     @PostMapping("/{id}")
     public Project postProject(@PathVariable String id,
                                 @RequestParam(defaultValue = "2") String sinceCommits,
