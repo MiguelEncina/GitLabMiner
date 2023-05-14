@@ -34,28 +34,26 @@ public class ProjectService {
 
         String uri = "https://gitlab.com/api/v4/projects/" + id;
 
-        ProjectSearch projectSearch = restTemplate.getForObject(uri + "?page=" + maxPages, ProjectSearch.class);
+        ProjectSearch projectSearch = restTemplate.getForObject(uri, ProjectSearch.class);
 
-        IssueSearch[] issuesArray = restTemplate.getForObject(uri + "/issues?page=" + maxPages, IssueSearch[].class);
+        IssueSearch[] issuesArray = restTemplate.getForObject(uri + "/issues?per_page=10", IssueSearch[].class);
 
-        List<Issue> issues = Arrays.stream(issuesArray).map(i -> new Issue(i.getId(), i.getIid(), i.getTitle(), i.getDescription(), i.getState(), i.getCreatedAt(), i.getUpdatedAt(), i.getClosedAt(), i.getLabels(), i.getAuthor(), i.getAssignee(), i.getUpvotes(), i.getDownvotes(), i.getWebUrl())).toList();
-        
-        for(Issue i: issues){
-            HttpEntity<Comment[]> request = new HttpEntity<Comment[]>(null, headers);  
-            ResponseEntity<Comment[]> response = restTemplate.exchange(uri + "/issues/" + i.getRefId() + "/notes?page=" + maxPages, HttpMethod.GET, request, Comment[].class);
-            i.setComments(Arrays.stream(response.getBody()).toList()); 
-        }
-
-        issues.stream()
+        List<Issue> issues = Arrays.stream(issuesArray).map(i -> new Issue(i.getId(), i.getIid(), i.getTitle(), i.getDescription(), i.getState(), i.getCreatedAt(), i.getUpdatedAt(), i.getClosedAt(), i.getLabels(), i.getAuthor(), i.getAssignee(), i.getUpvotes(), i.getDownvotes(), i.getWebUrl()))
         .filter(i -> {
             String[] s1 = i.getUpdatedAt().split("T");
             String[] s2 = s1[0].split("-");
             LocalDate last = LocalDate.of(Integer.parseInt(s2[0]), Integer.parseInt(s2[1]), Integer.parseInt(s2[2]));
             Integer difDias = LocalDate.now().getDayOfYear() - last.getDayOfYear();
             return (last.getYear()==LocalDate.now().getYear() && difDias <= Integer.parseInt(sinceIssues) && difDias >= 0);
-        }).toList();
+        }).limit(10*Integer.parseInt(maxPages)).toList();
+        
+        for(Issue i: issues){
+            HttpEntity<Comment[]> request = new HttpEntity<Comment[]>(null, headers);  
+            ResponseEntity<Comment[]> response = restTemplate.exchange(uri + "/issues/" + i.getRefId() + "/notes?per_page=10", HttpMethod.GET, request, Comment[].class);
+            i.setComments(Arrays.stream(response.getBody()).limit(10*Integer.parseInt(maxPages)).toList()); 
+        }
        
-        Commit[] commitsArray = restTemplate.getForObject(uri + "/repository/commits?page=" + maxPages, Commit[].class);
+        Commit[] commitsArray = restTemplate.getForObject(uri + "/repository/commits?per_page=10", Commit[].class);
 
         List<Commit> commits = Arrays.stream(commitsArray)
         .filter(c -> {
@@ -64,7 +62,7 @@ public class ProjectService {
             LocalDate last = LocalDate.of(Integer.parseInt(s2[0]), Integer.parseInt(s2[1]), Integer.parseInt(s2[2]));
             Integer difDias = LocalDate.now().getDayOfYear() - last.getDayOfYear();
             return (last.getYear()==LocalDate.now().getYear() && difDias <= Integer.parseInt(sinceCommits) && difDias >= 0);
-        }).toList();
+        }).limit(10*Integer.parseInt(maxPages)).toList();
 
         return new Project(projectSearch.getId().toString(), projectSearch.getName(), projectSearch.getWebUrl(), commits, issues);
     }
